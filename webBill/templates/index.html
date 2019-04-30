@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+{% load crispy_forms_tags %}
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Cotizaciones, Centro de Microscopia</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron">
+        <h1> Centro de Microscopia </h1>
+        <h2> Universidad de los Andes </h2>
+      </div>
+    </div>
+
+    <div class="container">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="form-group col-md-6 md-0">
+            {{ form.nombre | as_crispy_field }}
+          </div>
+          <div class="form-group col-md-6 md-0">
+            {{ form.correo | as_crispy_field }}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6 md-0">
+            {{ form.documento | as_crispy_field }}
+          </div>
+          <div class="form-group col-md-6 md-0">
+            {{ form.telefono | as_crispy_field }}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6 md-0">
+            {{ form.direccion | as_crispy_field }}
+          </div>
+          <div class="form-group col-md-6 md-0">
+            {{ form.ciudad | as_crispy_field }}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6 md-0">
+            {{ form.institucion | as_crispy_field }}
+          </div>
+          <div class="form-group col-md-6 md-0">
+            {{ form.pago | as_crispy_field }}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-12 md-0">
+            {{ form.muestra | as_crispy_field }}
+          </div>
+        </div>
+        <div class="form-row">
+          {% for equipo, descripciones in servicios.equipos_descripciones %}
+            <div class="container">
+              <div class="panel-group">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <button type="button" class="btn btn-secondary btn-lg btn-block"><a data-toggle="collapse" href="#collapse{{ forloop.counter }}" style="text-decoration: none; color : #ffffff;"> {{equipo}} </a></button>
+                  </div>
+                  <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
+                    <div class="container">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Cantidad</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for desc in descripciones %}
+                              <tr>
+                                <th scope="row"> {{ desc }} </th>
+                              </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+          {% endfor %}
+        </div>
+        <div class="form-row">
+          <input type="submit" class="btn btn-primary" value = "Enviar">
+        </div>
+      </form>
+    </div>
+
+  </body>
+</html>
