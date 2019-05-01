@@ -20,5 +20,5 @@ from quotation import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name = 'home'),
-    path(r'$', views.exito, name = 'exito')
+    path(r'exito', views.exito, name = 'exito')
 ]

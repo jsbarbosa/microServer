@@ -19,7 +19,7 @@ def index(request):
             target, args = correo.correoTargetArgs(cotizaciones, "")
             target(*args)
             return redirect('exito')
-    return render(request, 'index.html', context = {'form': form, 'servicios': form.servicios})
+    return render(request, 'index.html', context = {'form': form})
 
 def exito(request):
     return render(request, 'exito.html')

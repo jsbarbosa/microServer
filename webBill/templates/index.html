@@ -16,82 +16,91 @@
         <h2> Universidad de los Andes </h2>
       </div>
     </div>
-
     <div class="container">
+      <div class="jumbotron">
       <form method="post">
         {% csrf_token %}
-        <div class="form-row">
-          <div class="form-group col-md-6 md-0">
-            {{ form.nombre | as_crispy_field }}
+          <h4>Llene los siguientes datos:</h4>
+          <div class="form-row">
+            <div class="form-group col-md-6 md-0">
+              {{ form.nombre | as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 md-0">
+              {{ form.correo | as_crispy_field }}
+            </div>
           </div>
-          <div class="form-group col-md-6 md-0">
-            {{ form.correo | as_crispy_field }}
+          <div class="form-row">
+            <div class="form-group col-md-6 md-0">
+              {{ form.documento | as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 md-0">
+              {{ form.telefono | as_crispy_field }}
+            </div>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-6 md-0">
-            {{ form.documento | as_crispy_field }}
+          <div class="form-row">
+            <div class="form-group col-md-6 md-0">
+              {{ form.direccion | as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 md-0">
+              {{ form.ciudad | as_crispy_field }}
+            </div>
           </div>
-          <div class="form-group col-md-6 md-0">
-            {{ form.telefono | as_crispy_field }}
+          <div class="form-row">
+            <div class="form-group col-md-6 md-0">
+              {{ form.institucion | as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 md-0">
+              {{ form.pago | as_crispy_field }}
+            </div>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-6 md-0">
-            {{ form.direccion | as_crispy_field }}
+          <div class="form-row">
+            <div class="form-group col-md-12 md-0">
+              {{ form.muestra | as_crispy_field }}
+            </div>
           </div>
-          <div class="form-group col-md-6 md-0">
-            {{ form.ciudad | as_crispy_field }}
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-6 md-0">
-            {{ form.institucion | as_crispy_field }}
-          </div>
-          <div class="form-group col-md-6 md-0">
-            {{ form.pago | as_crispy_field }}
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-12 md-0">
-            {{ form.muestra | as_crispy_field }}
-          </div>
-        </div>
-        <div class="form-row">
-          {% for equipo, descripciones in servicios.equipos_descripciones %}
+          <h5>Seleccione los servicios a utilizar:</h5>
+
+          <p>Use los páneles desplegables para ver los servicios que ofrece cada equipo.</p>
+          <div class="form-row">
             <div class="container">
-              <div class="panel-group">
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <button type="button" class="btn btn-secondary btn-lg btn-block"><a data-toggle="collapse" href="#collapse{{ forloop.counter }}" style="text-decoration: none; color : #ffffff;"> {{equipo}} </a></button>
-                  </div>
-                  <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
-                    <div class="container">
-                      <table class="table table-striped">
-                        <thead>
-                          <tr>
-                            <th scope="col">Descripción</th>
-                            <th scope="col">Cantidad</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            {% for desc in descripciones %}
-                              <tr>
-                                <th scope="row"> {{ desc }} </th>
-                              </tr>
-                            {% endfor %}
-                        </tbody>
-                      </table>
+                {% for equipo in form.getEquipo %}
+                  <div class="container">
+                    <div class="panel-group">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <button type="button" data-toggle="collapse" class="btn btn-secondary btn-lg btn-block" data-target='#collapse{{ forloop.counter }}'>
+                            	{{ equipo }}
+                          </button>
+                        </div>
+                        <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
+                          <div class="container">
+                            <table class="table table-striped">
+                              <thead>
+                                <tr>
+                                  <th scope="col">Descripción</th>
+                                  <th scope="col">Cantidad</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                  <tr>
+                                    <th> {{ form.getDescripcion }} </th>
+                                    <th> {{ form.getCampo }} </th>
+                                    <!-- <th> {{ form.Administrativo_Curso_AFM }} </th> -->
+                                  </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                  <br>
+                {% endfor %}
             </div>
-            <br>
-          {% endfor %}
-        </div>
-        <div class="form-row">
+          </div>
+          <div class="form-row">
           <input type="submit" class="btn btn-primary" value = "Enviar">
+        </div>
         </div>
       </form>
     </div>

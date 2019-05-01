@@ -8,7 +8,6 @@ class Servicios(object):
         self.equipos_raw = mb.constants.EQUIPOS
 
         self.descripciones = None
-        self.equipos_descripciones = None
         for equipo in self.equipos_raw:
             setattr(self, equipo, getattr(mb.constants, equipo))
         self.generarCampos()
@@ -21,12 +20,11 @@ class Servicios(object):
             equipo_s = equipo_s.split("_")[0]
             self.equipos.append(equipo_s)
             self.descripciones[equipo_s] = list(equipo['Descripción'])
-        self.equipos_descripciones = [(equipo, self.descripciones[equipo]) for equipo in self.equipos]
 
     def getField(self, equipo, item):
         equipo = equipo.replace(' ', '_')
         item = item.replace(' ', '_')
-        return "%s_%s" % (equipo, item)
+        return ("%s_%s" % (equipo, item)).lower()
 
     def getEquipos(self):
         return self.equipos
@@ -42,7 +40,6 @@ class Servicios(object):
         for equipo in self.equipos:
             txt.append("\t\t\t%s:\n" % equipo + "\n".join(self.descripciones[equipo]))
         return "\n".join(txt)
-
 
 class QuoteForm(forms.Form):
     FIELDS = ['nombre', 'institucion', 'documento', 'telefono', 'direccion', 'ciudad', 'correo', 'muestra', 'pago']
@@ -62,40 +59,37 @@ class QuoteForm(forms.Form):
     pago = forms.ChoiceField(label = 'Forma de pago',
             choices = TIPO_CHOICES)
 
-    def __init__(self):
-        super(QuoteForm, self).__init__()
+    def __init__(self, *args):
+        super(QuoteForm, self).__init__(*args)
         self.servicios = Servicios()
         for equipo in self.servicios.getEquipos():
             for servicio in self.servicios.getDescripcionesEquipo(equipo):
+                # self.fields.update({self.servicios.getField(equipo, servicio): forms.IntegerField(required=False)})
                 self.fields[self.servicios.getField(equipo, servicio)] = forms.IntegerField()
 
-    def serviciosHTML(self):
-        text = []
-        for (i, equipo) in enumerate(self.servicios.getEquipos()):
-            fields = []
-            txt = """
-<div class="container">
-  <div class="panel-group">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <button class="panel-title">
-          <a data-toggle="collapse" href="#collapse%d">%s</a>
-        </button>
-      </div>
-      <div id="collapse%d" class="panel-collapse collapse">
-        <div class="container">
-            %s
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-    """
-            for servicio in self.servicios.getDescripcionesEquipo(equipo):
-                field = self.servicios.getField(equipo, servicio)
-                label = r'<label for = "id_%s" class = "col-form-label"> "%s" <\label>' % (field, servicio)
-                widget = r'<div class>\n<inputt type = "number" class="numberinput numberInput form-control" required id = "id_%s"<\div>' % (field)
-                fields.append(label + "\n" + widget)
-            txt = txt % (i, equipo, i, "\n".join(fields))
-            text.append(txt)
-        return "\n".join(text)
+        # self.current_equipo = None
+        # self.equipos_servicios_fields = self.getEquipoServiciosFields()
+
+    def getEquipo(self):
+        for equipo in self.servicios.getEquipos():
+            # self.current_equipo = equipo
+            yield equipo
+
+    def getDescripcion(self):
+        for equipo in self.servicios.getEquipos():
+            for descripcion in self.servicios.getDescripcionesEquipo(equipo):
+                yield descripcion
+
+    def getCampo(self):
+        for equipo in self.servicios.getEquipos():
+            for descripcion in self.servicios.getDescripcionesEquipo(equipo):
+                yield self.fields[self.servicios.getField(equipo, descripcion)]
+
+    def getEquipoServiciosFields(self):
+        temp = []
+        for equipo in self.servicios.getEquipos():
+            desc = self.servicios.getDescripcionesEquipo(equipo)
+            # fields = [self.fields[self.servicios.getField(equipo, d)] for d in desc]
+            yield equipo, zip(desc, fields)
+            # temp.append([equipo, zip(desc, fields)])
+        # return temp
