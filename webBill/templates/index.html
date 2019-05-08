@@ -7,7 +7,7 @@
     <title>Cotizaciones, Centro de Microscopia</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   </head>
   <body>
     <div class="container">
@@ -82,11 +82,13 @@
                                 </tr>
                               </thead>
                               <tbody>
+                                {% for campo in form.getCampo %}
                                   <tr>
-                                    <th> {{ form.getDescripcion }} </th>
-                                    <th> {{ form.getCampo }} </th>
+                                    <!-- <th> {{ form.getDescripcion }} </th> -->
+                                    <th> {{ campo }} </th>
                                     <!-- <th> {{ form.Administrativo_Curso_AFM }} </th> -->
                                   </tr>
+                                {% endfor %}
                               </tbody>
                             </table>
                           </div>

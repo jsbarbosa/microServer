@@ -1,6 +1,7 @@
 from django import forms
 import pandas as pd
 import microbill as mb
+from unidecode import unidecode
 
 class Servicios(object):
     def __init__(self):
@@ -18,13 +19,18 @@ class Servicios(object):
         for equipo_s in self.equipos_raw:
             equipo = getattr(self, equipo_s)
             equipo_s = equipo_s.split("_")[0]
+            equipo_s = ''.join([c for c in equipo_s if c.isalpha()])
             self.equipos.append(equipo_s)
             self.descripciones[equipo_s] = list(equipo['Descripción'])
 
     def getField(self, equipo, item):
-        equipo = equipo.replace(' ', '_')
-        item = item.replace(' ', '_')
-        return ("%s_%s" % (equipo, item)).lower()
+        fields = []
+        for field in (equipo, item):
+            field = unidecode(field)
+            field = ''.join([c for c in field if (c.isalpha() or c == ' ')])
+            field = field.replace(' ', '_')
+            fields.append(field)
+        return "_".join(fields).lower()
 
     def getEquipos(self):
         return self.equipos
@@ -64,15 +70,12 @@ class QuoteForm(forms.Form):
         self.servicios = Servicios()
         for equipo in self.servicios.getEquipos():
             for servicio in self.servicios.getDescripcionesEquipo(equipo):
-                # self.fields.update({self.servicios.getField(equipo, servicio): forms.IntegerField(required=False)})
-                self.fields[self.servicios.getField(equipo, servicio)] = forms.IntegerField()
-
-        # self.current_equipo = None
-        # self.equipos_servicios_fields = self.getEquipoServiciosFields()
+                name = self.servicios.getField(equipo, servicio)
+                setattr(self, name, forms.IntegerField(required = False))
+                self.fields[name] = getattr(self, name)
 
     def getEquipo(self):
         for equipo in self.servicios.getEquipos():
-            # self.current_equipo = equipo
             yield equipo
 
     def getDescripcion(self):
@@ -83,7 +86,8 @@ class QuoteForm(forms.Form):
     def getCampo(self):
         for equipo in self.servicios.getEquipos():
             for descripcion in self.servicios.getDescripcionesEquipo(equipo):
-                yield self.fields[self.servicios.getField(equipo, descripcion)]
+                yield getattr(self, self.servicios.getField(equipo, descripcion))
+                # yield self.fields[self.servicios.getField(equipo, descripcion)]
 
     def getEquipoServiciosFields(self):
         temp = []

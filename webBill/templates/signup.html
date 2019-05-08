@@ -1,0 +1,26 @@
+<!-- templates/signup.html -->
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<h2>Sign up</h2>
+<form method="post">
+  {% csrf_token %}
+  {% for field in form.visible_fields %}
+    {% if forloop.counter0|divisibleby:2%}
+      <div class="form-row">
+        <div class="form-group col-md-6 md-0">
+          {{ field | as_crispy_field }}
+        </div>
+    {% else %}
+        <div class="form-group col-md-6 md-0">
+          {{ field | as_crispy_field }}
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+  <button type="submit">Sign up</button>
+</form>
+{% endblock %}
