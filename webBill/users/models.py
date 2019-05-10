@@ -1,9 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 # Create your models here.
-# Usuario
 
-class User(AbstractUser):
+class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     email = models.EmailField(verbose_name = 'Email address', unique = True)
     REQUIRED_FIELDS = []
